@@ -8,7 +8,7 @@ import Hyperbee from "hyperbee";
 import AdmZip from "adm-zip";
 import { CID } from "multiformats";
 
-import { dbAppend, dbPut, setSigningKey } from "./src/dbPut.mjs";
+import { dbAddRelation, dbPut, setSigningKey } from "./src/dbPut.mjs";
 import { newKey } from "./src/encryptValue.mjs";
 import { keyFromPem } from "./src/signAttestation.mjs";
 
@@ -140,7 +140,7 @@ const metaContent = JSON.parse(metaContentEntry.getData())["contentMetadata"];
 const metaRecorder = JSON.parse(metaRecorderEntry.getData());
 
 // Add all keys, and go inside known object keys
-// dbPut/dbAppend functions are called asynchronously to speed things up
+// dbPut functions are called asynchronously to speed things up
 
 for (var key in metaContent) {
   console.log(`Processing key: ${key}`);
@@ -153,8 +153,20 @@ for (var key in metaContent) {
         // then store it as an array
         const parentEncryptedArchiveCid = metaContent[key][extrasKey];
         const parentContentCid = cidMapping[parentEncryptedArchiveCid];
-        dbAppend(datadb, contentCID, "childOf", CID.parse(parentContentCid));
-        dbAppend(datadb, parentContentCid, "parentOf", CID.parse(contentCID));
+        await dbAddRelation(
+          datadb,
+          contentCID,
+          "parents",
+          "verified",
+          CID.parse(parentContentCid)
+        );
+        await dbAddRelation(
+          datadb,
+          parentContentCid,
+          "children",
+          "verified",
+          CID.parse(contentCID)
+        );
       }
       dbPut(datadb, contentCID, extrasKey, metaContent[key][extrasKey]);
     }

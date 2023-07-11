@@ -1,0 +1,39 @@
+:root {
+  --theme1: rgb(98, 0, 238);
+  --theme1-hover: rgba(98, 0, 238, 0.1);
+  --theme1-active: rgba(98, 0, 238, 0.8);
+  --theme2: black;
+  --theme3: grey;
+  --theme-border: rgb(224, 224, 224);
+  color: unset !important;
+}
+
+.icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+  fill: currentColor;
+}
+
+form {
+  margin: 0;
+}
+
+/* https://developer.mozilla.org/en-US/docs/Learn/Forms/Styling_web_forms */
+input,
+textarea {
+  font-family: inherit;
+  font-size: 100%;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* Undo Uwazi styling */
+code {
+  color: unset !important;
+  background-color: transparent !important;
+}
+#hyperbee-entity-page-app {
+  line-height: initial;
+}
